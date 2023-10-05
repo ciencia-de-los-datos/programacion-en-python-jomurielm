@@ -11,7 +11,9 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
 
+data = csv.reader(open("data.csv"),delimiter="\t")
 
 def pregunta_01():
     """
@@ -21,7 +23,12 @@ def pregunta_01():
     214
 
     """
-    return
+    suma = 0
+
+    for row in data:
+        suma += int(row[1])
+
+    return suma
 
 
 def pregunta_02():
@@ -39,7 +46,15 @@ def pregunta_02():
     ]
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        if row[0] in letras.keys():
+            letras[row[0]] +=1
+        else:
+            letras[row[0]] = 1
+
+    return sorted(letras.items())
 
 
 def pregunta_03():
@@ -57,7 +72,15 @@ def pregunta_03():
     ]
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        if row[0] in letras.keys():
+            letras[row[0]] += int(row[1])
+        else:
+            letras[row[0]] = int(row[1])
+
+    return sorted(letras.items())
 
 
 def pregunta_04():
@@ -82,7 +105,16 @@ def pregunta_04():
     ]
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        month = row[2].split("-")[1]
+        if month in letras.keys():
+            letras[month] += 1
+        else:
+            letras[month] = 1
+
+    return sorted(letras.items())
 
 
 def pregunta_05():
@@ -100,7 +132,19 @@ def pregunta_05():
     ]
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        number = int(row[1])
+        if row[0] in letras.keys():
+            if number > letras[row[0]][0]:
+                letras[row[0]][0] = number
+            if number < letras[row[0]][1]:
+                letras[row[0]][1] = number
+        else:
+            letras[row[0]] = [number,number]
+
+    return [(rw[0],rw[1][0],rw[1][1]) for rw in sorted(letras.items())]
 
 
 def pregunta_06():
@@ -125,7 +169,22 @@ def pregunta_06():
     ]
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        for i in row[4].split(","):
+            key = i.split(":")[0]
+            number = int(i.split(":")[1])
+        
+            if key in letras.keys():
+                if number < letras[key][0]:
+                    letras[key][0] = number
+                if number > letras[key][1]:
+                    letras[key][1] = number
+            else:
+                letras[key] = [number,number]
+
+    return [(rw[0],rw[1][0],rw[1][1]) for rw in sorted(letras.items())]
 
 
 def pregunta_07():
@@ -149,7 +208,14 @@ def pregunta_07():
     ]
 
     """
-    return
+    numbers = {}
+
+    for row in data:
+        if int(row[1]) in numbers.keys():
+            numbers[int(row[1])][0].append(row[0])
+        else:
+            numbers[int(row[1])] = [[row[0]]]
+    return [(rw[0],rw[1][0]) for rw in sorted(numbers.items())]
 
 
 def pregunta_08():
@@ -174,7 +240,17 @@ def pregunta_08():
     ]
 
     """
-    return
+    numbers = {}
+
+    for row in data:
+        if int(row[1]) in numbers.keys():
+            if row[0] in numbers[int(row[1])][0]:
+                pass
+            else:
+                numbers[int(row[1])][0].append(row[0])
+        else:
+            numbers[int(row[1])] = [[row[0]]]
+    return [(rw[0],sorted(rw[1][0])) for rw in sorted(numbers.items())]
 
 
 def pregunta_09():
@@ -197,7 +273,18 @@ def pregunta_09():
     }
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        for i in row[4].split(","):
+            key = i.split(":")[0]
+        
+            if key in letras.keys():
+                letras[key] +=1
+            else:
+                letras[key] = 1
+
+    return dict(sorted(letras.items()))
 
 
 def pregunta_10():
@@ -218,7 +305,11 @@ def pregunta_10():
 
 
     """
-    return
+    letras = []
+
+    for row in data:
+        letras.append((row[0],len(row[3].split(",")),len(row[4].split(","))))
+    return letras
 
 
 def pregunta_11():
@@ -239,7 +330,17 @@ def pregunta_11():
 
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        values = row[3].split(",")
+        for i in values:
+            if i in letras.keys():
+                letras[i] += int(row[1])
+            else:
+                letras[i] = int(row[1])
+
+    return dict(sorted(letras.items()))
 
 
 def pregunta_12():
@@ -257,4 +358,14 @@ def pregunta_12():
     }
 
     """
-    return
+    letras = {}
+
+    for row in data:
+        values = row[4].split(",")
+        dic_values = dict((rw.split(":")[0],int(rw.split(":")[1])) for rw in values)
+        if row[0] in letras.keys():
+            letras[row[0]] += sum(dic_values.values())
+        else:
+            letras[row[0]] = sum(dic_values.values())
+
+    return dict(sorted(letras.items()))
